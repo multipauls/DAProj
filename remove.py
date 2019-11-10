@@ -8,91 +8,85 @@ import pymysql.cursors
 def closeStore():
     global cur
     row = {}
-    print("Enter new employee's details: ")
-    row["HRID"] = input("HR ID: ")
-    row["Name"] = input("Name: ")
-    row["Email"] = input("Email Address: ")
-    row["Phone"] = input("Phone Numbers: ").split(" ")
-    row["StoreID"] = input("Store ID: ")
-    row["Type"] = input("Type of Employee: ")
-    row["Salary"] = float(input("Salary: "))
+    row["StoreID"] = input("Enter Store ID to close: ")
 
-    for i in range(len(row["Phone"])):
-	    query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
-    	cur.execute(query1)
-    	con.commit()
+    query1 = "DELETE FROM STORE WHERE StoreID='%s' " %(row["StoreID"])
+    cur.execute(query1)
+    con.commit()
 
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
-
+    query2 = "DELETE FROM HAS WHERE StoreID='%s' " %(row["StoreID"])
     cur.execute(query2)
     con.commit()
+
+    query3 = "UPDATE EMPLOYEE SET StoreID='000' WHERE StoreID='%s' " %(row["StoreID"])
+    cur.execute(query3)
+    con.commit()
+
+    query4 = "DELETE FROM REGISTER WHERE StoreID='%s' " %(row["StoreID"])
+    cur.execute(query4)
+    con.commit()
+
+    query5 = "DELETE FROM SALE WHERE StoreID='%s' " %(row["StoreID"])
+    cur.execute(query5)
+    con.commit()
+
+    query6 = "DELETE FROM HASTYPE WHERE StoreID='%s' " %(row["StoreID"])
+    cur.execute(query6)
+    con.commit()
+
+
     return
 
 def fireEmp():
     global cur
     row = {}
-    print("Enter new employee's details: ")
-    row["HRID"] = input("HR ID: ")
-    row["Name"] = input("Name: ")
-    row["Email"] = input("Email Address: ")
-    row["Phone"] = input("Phone Numbers: ").split(" ")
-    row["StoreID"] = input("Store ID: ")
-    row["Type"] = input("Type of Employee: ")
-    row["Salary"] = float(input("Salary: "))
+    row["HRID"] = input("Enter Employee HR ID to remove: ")
 
-    for i in range(len(row["Phone"])):
-	    query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
-    	cur.execute(query1)
-    	con.commit()
+	query1 = "DELETE FROM EMPLOYEE WHERE HRID='%s' " %(row["HRID"])
+    cur.execute(query1)
+    con.commit()
 
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
-
+    query2 = "DELETE FROM HR WHERE HRID='%s' " %(row["HRID"])
     cur.execute(query2)
     con.commit()
+
+    query3 = "DELETE FROM REGISTER WHERE CashierHRID='%s' " %(row["HRID"])
+    cur.execute(query3)
+    con.commit()
+
+    query4 = "UPDATE REGISTER SET ManagerHRID='00000' WHERE ManagerHRID='%s' " %(row["HRID"])
+    cur.execute(query4)
+    con.commit()
+
+
+    query5 = "DELETE FROM SUPERVISES WHERE CashierHRID='%s' " %(row["HRID"])
+    cur.execute(query5)
+    con.commit()
+
+    query6 = "UPDATE SUPERVISES SET SuperviserHRID='00000' WHERE SuperviserHRID='%s' " %(row["HRID"])
+    cur.execute(query6)
+    con.commit()
+
     return
 
 def removeSale():
-    global cur
     row = {}
-    print("Enter new employee's details: ")
-    row["HRID"] = input("HR ID: ")
-    row["Name"] = input("Name: ")
-    row["Email"] = input("Email Address: ")
-    row["Phone"] = input("Phone Numbers: ").split(" ")
-    row["StoreID"] = input("Store ID: ")
-    row["Type"] = input("Type of Employee: ")
-    row["Salary"] = float(input("Salary: "))
+    row["SaleID"] = input("Enter Sale ID to delete: ")
 
-    for i in range(len(row["Phone"])):
-	    query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
-    	cur.execute(query1)
-    	con.commit()
-
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
-
-    cur.execute(query2)
+	query1 = "DELETE FROM SALE WHERE SaleID='%s' " %(row["SaleID"])
+    cur.execute(query1)
     con.commit()
+
     return
 
 def removeItemFromStore():
-    global cur
-    row = {}
-    print("Enter new employee's details: ")
-    row["HRID"] = input("HR ID: ")
-    row["Name"] = input("Name: ")
-    row["Email"] = input("Email Address: ")
-    row["Phone"] = input("Phone Numbers: ").split(" ")
-    row["StoreID"] = input("Store ID: ")
-    row["Type"] = input("Type of Employee: ")
-    row["Salary"] = float(input("Salary: "))
+   row = {}
+    row["StoreID"] = input("Enter Store ID: ")
+    row["ItemName"] = input("Enter Item Name: ")
 
-    for i in range(len(row["Phone"])):
-	    query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
-    	cur.execute(query1)
-    	con.commit()
 
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
-
-    cur.execute(query2)
+	query1 = "DELETE FROM HAS WHERE StoreID='%s' AND ItemName='%s'" %(row["StoreID"],row["ItemName"])
+    cur.execute(query1)
     con.commit()
+
     return
