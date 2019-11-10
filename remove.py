@@ -89,4 +89,6 @@ def removeItemFromStore():
     cur.execute(query1)
     con.commit()
 
+
+
     return

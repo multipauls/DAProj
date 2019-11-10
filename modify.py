@@ -134,3 +134,21 @@ def changeSupervisor():
     con.commit()
     return
 
+def changeTypes():
+    global cur
+    row = {}
+    print("Enter Store's details: ")
+    row["StoreID"] = input("Store ID: ")
+    row["Types"] = input("Types of Items Carried ").split(" ")
+    
+
+    query1 = "DELETE FROM HASTYPES WHERE StoreID='%s'" %(row["StoreID"])
+    cur.execute(query1)
+    con.commit()
+
+   for i in range(len(row["Types"])):
+        query2 = "INSERT INTO HASTYPE(StoreID, TypesOfItems) VALUES('%s', '%s')" %( row["StoreID"], row["Types"][i])
+        cur.execute(query2)
+        con.commit()   
+
+    return

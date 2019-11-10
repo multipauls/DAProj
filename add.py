@@ -37,6 +37,7 @@ def addItem():
     row["ItemNo"] = input("Item Number: ")
     row["CP"] = input("Item Cost Price: ")
     row["SP"] = input("Item Sell Price: ")
+    row["Types"] = input("Types of Item").split(" ")
     row["Locations"] = input("Store IDs of Locations: ").split(" ")
 
     for i in range(len(row["Locations"])):
@@ -44,9 +45,14 @@ def addItem():
     	cur.execute(query1)
     	con.commit()
 
-    query2 = "INSERT INTO ITEM(ItemID, Name, ItemNumber, ItemCostPrice, ItemSalePrice) VALUES('%s', '%s', '%d', '%d', '%d')" %(row["ItemID"], row["Name"], row["ItemNo"], row["CP"], row["SP"])
+    for i in range(len(row["Types"])):
+        query2 = "INSERT INTO ISTYPE(ItemID, TypesOfItems) VALUES('%s', '%s')" %( row["ItemID"], row["Types"][i])
+        cur.execute(query2)
+        con.commit()
 
-    cur.execute(query2)
+    query3 = "INSERT INTO ITEM(ItemID, Name, ItemNumber, ItemCostPrice, ItemSalePrice) VALUES('%s', '%s', '%d', '%d', '%d')" %(row["ItemID"], row["Name"], row["ItemNo"], row["CP"], row["SP"])
+
+    cur.execute(query3)
     con.commit()
     return
 
@@ -57,6 +63,13 @@ def openStore():
     row["StoreID"] = input("Store ID: ")
     row["Location"] = input("Location: ")
     row["NumReg"] = input("Number of Registers: ")
+    row["Types"] = input("Types of Items").split(" ")
+
+    for i in range(len(row["Types"])):
+        query1 = "INSERT INTO HASTYPE(StoreID, TypesOfItems) VALUES('%s', '%s')" %( row["StoreID"], row["Types"][i])
+        cur.execute(query1)
+        con.commit()
+
 
     query2 = "INSERT INTO STORE(StoreID, Location, NumOfRegisters) VALUES('%s', '%s', %d')" %(row["StoreID"], row["Location"], row["NumReg"])
 
