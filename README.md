@@ -1,7 +1,7 @@
 ﻿Functions:
 # TODO
 Add Customer credits in purchases
-ISTYPE AND HASTYPE (modify)
+
 
 * Add 
    * item (includes has)
