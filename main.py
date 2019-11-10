@@ -92,14 +92,19 @@ def buyRegister():
     row["CashierIDs"] = input("Cashier IDs: ").split(" ")
     row["ManagerID"] = input("Manager ID: ")
 
-    #calc regno as regNo here
+    #calculate register no as regNo here
+    query = "SELECT NumOfRegisters FROM STORE WHERE StoreID='%s' " %(row["Store ID"])
+    cur.execute(query)
+    calcRegNo = cur.fetchall()
+    RegNo=int(calcRegNo[0])+1
+
 
     for i in range(len(row["CashierIDs"])):
 	    query1 = "INSERT INTO REGISTER(StoreID, RegisterNumber, CashierHRID, ManagerHRID) VALUES('%s', '%d', '%s', '%s')" %(row["StoreID"], regNo, row["CashierIDs"][i], row["ManagerID"])
     	cur.execute(query1)
     	con.commit()
 
-    query2 = "UPDATE EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
+    query2 = "UPDATE STORE SET NumOfRegisters='%d' WHERE StoreID='%s' " %( regNo, row["StoreID"])
 
     cur.execute(query2)
     con.commit()
@@ -108,21 +113,14 @@ def buyRegister():
 def newSale():
     global cur
     row = {}
-    print("Enter new employee's details: ")
-    row["HRID"] = input("HR ID: ")
-    row["Name"] = input("Name: ")
-    row["Email"] = input("Email Address: ")
-    row["Phone"] = input("Phone Numbers: ").split(" ")
+    print("Enter new sale details: ")
+    row["SaleID"] = input("Sale ID: ")
     row["StoreID"] = input("Store ID: ")
-    row["Type"] = input("Type of Employee: ")
-    row["Salary"] = float(input("Salary: "))
+    row["Credit"] = input("Percentage Credit: ")
+    row["Start"] = input("Start Date (YYYY-MM-DD): ")
+    row["End"] = input("End Date (YYYY-MM-DD): ")
 
-    for i in range(len(row["Phone"])):
-	    query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
-    	cur.execute(query1)
-    	con.commit()
-
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
+    query2 = "INSERT INTO SALE(SaleID, StoreID, PercentageCredit, StartDate, EndDate) VALUES('%s', '%s', '%d', '%s', '%s')" %(row["SaleID"], row["StoreID"], row["Credit"], row["Start"], row["End"])
 
     cur.execute(query2)
     con.commit()
@@ -131,24 +129,26 @@ def newSale():
 def newPurchase():
     global cur
     row = {}
-    print("Enter new employee's details: ")
-    row["HRID"] = input("HR ID: ")
-    row["Name"] = input("Name: ")
-    row["Email"] = input("Email Address: ")
-    row["Phone"] = input("Phone Numbers: ").split(" ")
+    print("Enter new purchase details: ")
+    row["CustID"] = input("Customer HR ID: ")
+    row["ItemIDs"] = input("Item IDs: ").split(" ")
+    row["EmployeeID"] = input("Employee HR ID: ")
     row["StoreID"] = input("Store ID: ")
-    row["Type"] = input("Type of Employee: ")
-    row["Salary"] = float(input("Salary: "))
+    row["SaleID"] = input("Sale ID: ")
 
-    for i in range(len(row["Phone"])):
-	    query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
+    for i in range(len(row["ItemIDs"])):
+	    query1 = "INSERT INTO PURCHASES(CustomerHRID, ItemID, EmployeeHRID, StoreID, SaleID) VALUES('%s', '%s', '%s', '%s', '%s')" %(row["CustID"], row["ItemIDs"][i], row["EmployeeID"], row["StoreID"], row["SaleID"])
     	cur.execute(query1)
     	con.commit()
 
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
+    	query = "SELECT ItemName FROM ITEM WHERE ItemID='%s' " %(row["ItemIDs"][i])
+    	cur.execute(query)
+    	itemname = cur.fetchall()
+    	itemname = string(itemname[0])
+    	query2 = "INSERT IGNORE INTO BOUGHT(CustomerHRID, ItemName) VALUES('%s', '%s')" %(row["CustID"], itemname)
 
-    cur.execute(query2)
-    con.commit()
+    	cur.execute(query2)
+    	con.commit()
     return
 
 #Removing and deleting fns
