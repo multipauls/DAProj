@@ -1,5 +1,7 @@
 ﻿Functions:
-
+# TODO
+Add Customer credits in purchases
+ISTYPE AND HASTYPE (add,remove and modify)
 
 * Add 
    * item (includes has)
@@ -10,6 +12,7 @@
    * Sale
    * BOUGHT
    * PURCHASES (AND UPDATE STORE CREDIT FOR CUSTOMER)
+   * SUPERVISES
 
 
 *  Remove

@@ -21,7 +21,7 @@ def hireEmp():
     	cur.execute(query1)
     	con.commit()
 
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
+    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["Salary"])
 
     cur.execute(query2)
     con.commit()
@@ -152,3 +152,15 @@ def newPurchase():
     return
 
 
+def addSupervisor():
+    global cur
+    row = {}
+    print("Enter New Supervisor's and Supervisee's details: ")
+    row["EmpHRID"] = input("Supervisee HR ID: ")
+    row["SuperHRID"] = input("Supervisor HR ID: ")
+    
+
+    query2 = "INSERT INTO SUPERVISES(CashierHRID, SupervisorHRID) VALUES('%s', '%s')" %(row["EmpHRID"], row["SuperHRID"])
+    cur.execute(query2)
+    con.commit()
+    return
