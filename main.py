@@ -14,7 +14,7 @@ def hireEmp():
     row["Phone"] = input("Phone Numbers: ").split(" ")
     row["StoreID"] = input("Store ID: ")
     row["Type"] = input("Type of Employee: ")
-    row["Salary"] = float(input("Salary: "))
+    row["Salary"] = input("Salary: ")
 
     for i in range(len(row["Phone"])):
 	    query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
@@ -31,21 +31,20 @@ def hireEmp():
 def addItem():
     global cur
     row = {}
-    print("Enter new employee's details: ")
-    row["HRID"] = input("HR ID: ")
+    print("Enter new item's details: ")
+    row["ItemID"] = input("Item ID: ")
     row["Name"] = input("Name: ")
-    row["Email"] = input("Email Address: ")
-    row["Phone"] = input("Phone Numbers: ").split(" ")
-    row["StoreID"] = input("Store ID: ")
-    row["Type"] = input("Type of Employee: ")
-    row["Salary"] = float(input("Salary: "))
+    row["ItemNo"] = input("Item Number: ")
+    row["CP"] = input("Item Cost Price: ")
+    row["SP"] = input("Item Sell Price: ")
+    row["Locations"] = input("Store IDs of Locations: ").split(" ")
 
-    for i in range(len(row["Phone"])):
-	    query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
+    for i in range(len(row["Locations"])):
+	    query1 = "INSERT INTO HAS(StoreID, ItemName) VALUES('%s', '%s')" %(row["Name"], row["Locations"][i])
     	cur.execute(query1)
     	con.commit()
 
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
+    query2 = "INSERT INTO ITEM(ItemID, Name, ItemNumber, ItemCostPrice, ItemSalePrice) VALUES('%s', '%s', '%d', '%d', '%d')" %(row["ItemID"], row["Name"], row["ItemNo"], row["CP"], row["SP"])
 
     cur.execute(query2)
     con.commit()
@@ -54,21 +53,12 @@ def addItem():
 def openStore():
     global cur
     row = {}
-    print("Enter new employee's details: ")
-    row["HRID"] = input("HR ID: ")
-    row["Name"] = input("Name: ")
-    row["Email"] = input("Email Address: ")
-    row["Phone"] = input("Phone Numbers: ").split(" ")
+    print("Enter new store's details: ")
     row["StoreID"] = input("Store ID: ")
-    row["Type"] = input("Type of Employee: ")
-    row["Salary"] = float(input("Salary: "))
+    row["Location"] = input("Location: ")
+    row["NumReg"] = input("Number of Registers: ")
 
-    for i in range(len(row["Phone"])):
-	    query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
-    	cur.execute(query1)
-    	con.commit()
-
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
+    query2 = "INSERT INTO STORE(StoreID, Location, NumOfRegisters) VALUES('%s', '%s', %d')" %(row["StoreID"], row["Location"], row["NumReg"])
 
     cur.execute(query2)
     con.commit()
@@ -77,21 +67,18 @@ def openStore():
 def newCustomer():
     global cur
     row = {}
-    print("Enter new employee's details: ")
+    print("Enter new customer's details: ")
     row["HRID"] = input("HR ID: ")
     row["Name"] = input("Name: ")
     row["Email"] = input("Email Address: ")
     row["Phone"] = input("Phone Numbers: ").split(" ")
-    row["StoreID"] = input("Store ID: ")
-    row["Type"] = input("Type of Employee: ")
-    row["Salary"] = float(input("Salary: "))
 
     for i in range(len(row["Phone"])):
 	    query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
     	cur.execute(query1)
     	con.commit()
 
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
+    query2 = "INSERT INTO CUSTOMER(HRID) VALUES('%s')" %(row["HRID"])
 
     cur.execute(query2)
     con.commit()
@@ -100,21 +87,19 @@ def newCustomer():
 def buyRegister():
     global cur
     row = {}
-    print("Enter new employee's details: ")
-    row["HRID"] = input("HR ID: ")
-    row["Name"] = input("Name: ")
-    row["Email"] = input("Email Address: ")
-    row["Phone"] = input("Phone Numbers: ").split(" ")
+    print("Enter new register's details: ")
     row["StoreID"] = input("Store ID: ")
-    row["Type"] = input("Type of Employee: ")
-    row["Salary"] = float(input("Salary: "))
+    row["CashierIDs"] = input("Cashier IDs: ").split(" ")
+    row["ManagerID"] = input("Manager ID: ")
 
-    for i in range(len(row["Phone"])):
-	    query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
+    #calc regno as regNo here
+
+    for i in range(len(row["CashierIDs"])):
+	    query1 = "INSERT INTO REGISTER(StoreID, RegisterNumber, CashierHRID, ManagerHRID) VALUES('%s', '%d', '%s', '%s')" %(row["StoreID"], regNo, row["CashierIDs"][i], row["ManagerID"])
     	cur.execute(query1)
     	con.commit()
 
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
+    query2 = "UPDATE EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["SALARY"])
 
     cur.execute(query2)
     con.commit()
