@@ -1,9 +1,7 @@
 ﻿Functions:
-# TODO
-Add Customer credits in purchases
 
 
-* Add 
+* Add : Done
    * item (includes has)
    * Store
    * Customer
@@ -15,14 +13,14 @@ Add Customer credits in purchases
    * SUPERVISES
 
 
-*  Remove
+*  Remove : Done
    * Store
    * Employee
    * Sale
    * HAS
 
 
-* Modify
+* Modify : Done
    * Item
    * Customer
    * Employee
