@@ -10,10 +10,31 @@ def closeStore():
     row = {}
     row["StoreID"] = input("Enter Store ID to close: ")
 
-    query2 = "DELETE FROM STORE WHERE StoreID='%s' " %(row["StoreID"])
+    query1 = "DELETE FROM STORE WHERE StoreID='%s' " %(row["StoreID"])
+    cur.execute(query1)
+    con.commit()
 
+    query2 = "DELETE FROM HAS WHERE StoreID='%s' " %(row["StoreID"])
     cur.execute(query2)
     con.commit()
+
+    query3 = "UPDATE EMPLOYEE SET StoreID='000' WHERE StoreID='%s' " %(row["StoreID"])
+    cur.execute(query3)
+    con.commit()
+
+    query4 = "DELETE FROM REGISTER WHERE StoreID='%s' " %(row["StoreID"])
+    cur.execute(query4)
+    con.commit()
+
+    query5 = "DELETE FROM SALE WHERE StoreID='%s' " %(row["StoreID"])
+    cur.execute(query5)
+    con.commit()
+
+    query6 = "DELETE FROM HASTYPE WHERE StoreID='%s' " %(row["StoreID"])
+    cur.execute(query6)
+    con.commit()
+
+
     return
 
 def fireEmp():
@@ -28,6 +49,24 @@ def fireEmp():
     query2 = "DELETE FROM HR WHERE HRID='%s' " %(row["HRID"])
     cur.execute(query2)
     con.commit()
+
+    query3 = "DELETE FROM REGISTER WHERE CashierHRID='%s' " %(row["HRID"])
+    cur.execute(query3)
+    con.commit()
+
+    query4 = "UPDATE REGISTER SET ManagerHRID='00000' WHERE ManagerHRID='%s' " %(row["HRID"])
+    cur.execute(query4)
+    con.commit()
+
+
+    query5 = "DELETE FROM SUPERVISES WHERE CashierHRID='%s' " %(row["HRID"])
+    cur.execute(query5)
+    con.commit()
+
+    query6 = "UPDATE SUPERVISES SET SuperviserHRID='00000' WHERE SuperviserHRID='%s' " %(row["HRID"])
+    cur.execute(query6)
+    con.commit()
+
     return
 
 def removeSale():

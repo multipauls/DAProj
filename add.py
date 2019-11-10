@@ -40,7 +40,7 @@ def addItem():
     row["Locations"] = input("Store IDs of Locations: ").split(" ")
 
     for i in range(len(row["Locations"])):
-	    query1 = "INSERT INTO HAS(StoreID, ItemName) VALUES('%s', '%s')" %(row["Name"], row["Locations"][i])
+	    query1 = "INSERT INTO HAS(StoreID, ItemName) VALUES('%s', '%s')" %( row["Locations"][i], row["Name"])
     	cur.execute(query1)
     	con.commit()
 
@@ -93,7 +93,7 @@ def buyRegister():
     row["ManagerID"] = input("Manager ID: ")
 
     #calculate register no as regNo here
-    query = "SELECT NumOfRegisters FROM STORE WHERE StoreID='%s' " %(row["Store ID"])
+    query = "SELECT NumOfRegisters FROM STORE WHERE StoreID='%s' " %(row["StoreID"])
     cur.execute(query)
     calcRegNo = cur.fetchall()
     RegNo=int(calcRegNo[0])+1
