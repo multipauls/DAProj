@@ -564,9 +564,9 @@ optionFunctionMapping = {
 }
 
 while(1):
-    tmp = sp.call('clear',shell=True)
+        
     username = "root"
-    password = "adlucem123"
+    password = ""
 
     try:
         con = pymysql.connect('localhost',

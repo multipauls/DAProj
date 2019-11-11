@@ -1,6 +1,6 @@
 import pymysql
 
-connection = pymysql.connect("localhost","root","","LEARN");
+connection = pymysql.connect("localhost","root","","FRANCHISE");
 cursor = connection.cursor();
 
 sql_query = "SELECT VERSION()";
