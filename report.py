@@ -177,6 +177,7 @@ def newPurchase():
     query5 = "SELECT StoreCredit FROM CUSTOMER WHERE HRID='%s'" %(row["CustID"])
     cur.execute(query5)
     curCredit=cur.fetchall()
+    print(curCredit)
     curCredit=float(curCredit[0][0])
 
     query6 = "UPDATE CUSTOMER SET StoreCredit='%d' WHERE HRID='%s'" %(curCredit+Credit*profit/100,row["CustID"])
@@ -259,7 +260,7 @@ def fireEmp():
     cur.execute(query5)
     con.commit()
 
-    query6 = "UPDATE SUPERVISES SET SuperviserHRID='00000' WHERE SuperviserHRID='%s' " %(row["HRID"])
+    query6 = "UPDATE SUPERVISES SET SupervisorHRID='00000' WHERE SupervisorHRID='%s' " %(row["HRID"])
     cur.execute(query6)
     con.commit()
 
@@ -301,11 +302,10 @@ def modifyItem():
     row["SP"] = input("New Item Sell Price: ")
     row["Locations"] = input("Store IDs of New Locations: ").split(" ")
 
-    query = "SELECT ItemName FROM Item WHERE ItemID='%s' " %(row["ItemID"])
+    query = "SELECT Name FROM ITEM WHERE ItemID='%s' " %(row["ItemID"])
     cur.execute(query)
     Name = cur.fetchall()
-    Name=string(Name[0][0])
-
+    Name=str(Name[0][0])
     query="DELETE FROM HAS WHERE ItemName='%s'" %(Name)
     cur.execute(query)
     con.commit()
@@ -315,7 +315,7 @@ def modifyItem():
         cur.execute(query1)
         con.commit()
 
-    query2 = "UPDATE ITEM SET ItemNumber='%d', ItemCostPrice='%d', ItemSellPrice='%d' WHERE ItemID='%s'" %(int(row["ItemNo"]), int(row["CP"]), int(row["SP"]), row["ItemID"])
+    query2 = "UPDATE ITEM SET ItemNumber='%d', ItemCostPrice='%d', ItemSalePrice='%d' WHERE ItemID='%s'" %(int(row["ItemNo"]), int(row["CP"]), int(row["SP"]), row["ItemID"])
 
     cur.execute(query2)
     con.commit()
@@ -379,7 +379,7 @@ def modifyRegister():
     row["ManagerID"] = input("New Manager ID: ")
 
 
-    query1 = "DELETE FROM REGISTER WHERE HRID='%s'" %(row["HRID"])
+    query1 = "DELETE FROM REGISTER WHERE StoreID='%s' AND RegisterNumber='%d'" %(row["StoreID"], int(row["RegID"]))
     cur.execute(query1)
     con.commit()
 
@@ -399,7 +399,7 @@ def modifySale():
     row["Start"] = input("New Start Date (YYYY-MM-DD): ")
     row["End"] = input("New End Date (YYYY-MM-DD): ")
 
-    query2 = "UPDATE SALE SET StoreID='%s', PercentageCredit='%s', StartDate='%s', EndDate='%s' WHERE SaleID='%s'" %(row["StoreID"], row["Credit"], row["StartDate"], row["EndDate"], row["SaleID"])
+    query2 = "UPDATE SALE SET StoreID='%s', PercentageCredit='%s', StartDate='%s', EndDate='%s' WHERE SaleID='%s'" %(row["StoreID"], row["Credit"], row["Start"], row["End"], row["SaleID"])
 
     cur.execute(query2)
     con.commit()
@@ -426,7 +426,7 @@ def changeTypes():
     row["Types"] = input("Types of Items Carried ").split(" ")
 
 
-    query1 = "DELETE FROM HASTYPES WHERE StoreID='%s'" %(row["StoreID"])
+    query1 = "DELETE FROM HASTYPE WHERE StoreID='%s'" %(row["StoreID"])
     cur.execute(query1)
     con.commit()
 
@@ -487,7 +487,7 @@ def showStoreItems():
 
 def showCustomerCredits():
     global cur
-    CustID=input("Enter Customer HRID")
+    CustID=input("Enter Customer HRID: ")
     query2 = "SELECT StoreCredit FROM CUSTOMER WHERE HRID='%s'" %(CustID)
 
     cur.execute(query2)
@@ -500,7 +500,7 @@ def checkNowSales():
     global cur
     today=date.today()
     query="SELECT * FROM SALE WHERE '%s' BETWEEN StartDate AND EndDate"
-    cur.execute()
+    cur.execute(query)
     salesNow=cur.fetchall()
     for i in range(len(salesNow)):
         print(salesNow[i])
@@ -513,10 +513,10 @@ def checkSuperviseeSalaryProfit():
     empid=input("Enter supervisee's HRID: ")
 
     query = "SELECT A.Salary FROM EMPLOYEE A, SUPERVISES B WHERE B.CashierHRID='%s' AND B.SupervisorHRID='%s' AND B.CashierHRID=A.HRID" %(empid, id)
-    cur = execute(query)
+    cur.execute(query)
     superviseeSalary = cur.fetchall()
     for i in range(len(superviseeSalary)):
-        print(superviseeSalary[i])
+        print(superviseeSalary[i][0])
     if len(superviseeSalary) == 0:
         print("This employee is not your supervisee")
     return
@@ -524,11 +524,12 @@ def checkSuperviseeSalaryProfit():
 def checkMySalary():
     global cur
     id=input("Enter HRID whose salary you want to see:")
-    print("The Employee with ID ",id ,"has a salary of", )
 
-    query = "SELECT Salary FROM EMPLOYEE WHERE HRID = '%s'"
+    query = "SELECT Salary FROM EMPLOYEE WHERE HRID = '%s'" %(id)
     cur.execute(query)
     blah = cur.fetchall()
+    print (blah)
+
     blah=int(blah[0][0])
     print (blah)
     return
@@ -568,13 +569,12 @@ while(1):
         username = "mona"#input("Username: ")
         password = "password"#input("Password: ")
 
-    #try:
-        con = pymysql.connect("localhost","mona","password","FRANCHISE");
+        try:
+            con = pymysql.connect("localhost","mona","password","FRANCHISE");
 
 
-        cur = con.cursor()
-        while(1):
-                #tmp = sp.call('clear',shell=True)
+            cur = con.cursor()
+            while(1):
                 print("1. Hire a new employee")
                 print("2. Add an item")
                 print("3. Open a store")
@@ -601,19 +601,17 @@ while(1):
                 print("24. Check sales going on now")
                 print("25. Check supervisee's salary and profit")
                 print("26. Check own salary")
-                print("27. Logout")
+
                 c = int(input("Enter choice> "))
-                #tmp = sp.call('clear',shell=True)
-                if c==27:
-                    break
-                else:
-                    optionFunctionMapping[c]()
 
 
-    #except:
-     #   tmp = sp.call('clear',shell=True)
-     #   print("Connection Refused: Either username or password is incorrect or user doesn't have access to database")
-     #   tmp = input("Enter any key to CONTINUE>")
+                optionFunctionMapping[c]()
+
+
+        except:
+            tmp = sp.call('clear',shell=True)
+            print("Error")
+            tmp = input("Enter any key to CONTINUE>")
 
 
 
