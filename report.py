@@ -21,7 +21,7 @@ def hireEmp():
         cur.execute(query1)
         con.commit()
 
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, SALARY) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["Salary"])
+    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, Salary) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["Salary"])
 
     cur.execute(query2)
     con.commit()
@@ -363,7 +363,7 @@ def modifyEmpDetails():
         cur.execute(query2)
         con.commit()
 
-    query3 = "UPDATE EMPLOYEE SET StoreID='%s', TypeOfEmployee='%s', SALARY='%d' WHERE HRID='%s'" %( row["StoreID"], row["Type"], row["Salary"], row["HRID"])
+    query3 = "UPDATE EMPLOYEE SET StoreID='%s', TypeOfEmployee='%s', Salary='%d' WHERE HRID='%s'" %( row["StoreID"], row["Type"], row["Salary"], row["HRID"])
     cur.execute(query3)
     con.commit()
     return
@@ -526,7 +526,7 @@ def checkMySalary():
     id=input("Enter HRID whose salary you want to see:")
     print("The Employee with ID ",id ,"has a salary of", )
 
-    query = "SELECT SALARY FROM EMPLOYEE WHERE HRID = '%s'"
+    query = "SELECT Salary FROM EMPLOYEE WHERE HRID = '%s'"
     cur.execute(query)
     blah = cur.fetchall()
     blah=int(blah[0])
@@ -565,15 +565,15 @@ optionFunctionMapping = {
 
 while(1):
     tmp = sp.call('clear',shell=True)
-    username = input("Username: ")
-    password = input("Password: ")
+    username = "root"
+    password = "adlucem123"
 
     try:
-        con = pymysql.connect(host='localhost',
-                user=username,
-                password=password,
-                db='FRANCHISE',
-                cursorclass=pymysql.cursors.DictCursor)
+        con = pymysql.connect('localhost',
+                username,
+                password,
+                'FRANCHISE',
+                pymysql.cursors.DictCursor)
         with con:
             cur = con.cursor()
             while(1):
