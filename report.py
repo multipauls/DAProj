@@ -17,11 +17,11 @@ def hireEmp():
     row["Salary"] = input("Salary: ")
 
     for i in range(len(row["Phone"])):
-        query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
+        query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], int(row["Phone"][i]))
         cur.execute(query1)
         con.commit()
 
-    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, Salary) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], row["Salary"])
+    query2 = "INSERT INTO EMPLOYEE(HRID, StoreID, TypeOfEmployee, Salary) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["StoreID"], row["Type"], int(row["Salary"]))
 
     cur.execute(query2)
     con.commit()
@@ -37,7 +37,7 @@ def addItem():
     row["ItemNo"] = input("Item Number: ")
     row["CP"] = input("Item Cost Price: ")
     row["SP"] = input("Item Sell Price: ")
-    row["Types"] = input("Types of Item").split(" ")
+    row["Types"] = input("Types of Item: ").split(" ")
     row["Locations"] = input("Store IDs of Locations: ").split(" ")
 
     for i in range(len(row["Locations"])):
@@ -46,11 +46,11 @@ def addItem():
         con.commit()
 
     for i in range(len(row["Types"])):
-        query2 = "INSERT INTO ISTYPE(ItemID, TypesOfItems) VALUES('%s', '%s')" %( row["ItemID"], row["Types"][i])
+        query2 = "INSERT INTO ISTYPE(ItemID, TypeOfItem) VALUES('%s', '%s')" %( row["ItemID"], row["Types"][i])
         cur.execute(query2)
         con.commit()
 
-    query3 = "INSERT INTO ITEM(ItemID, Name, ItemNumber, ItemCostPrice, ItemSalePrice) VALUES('%s', '%s', '%d', '%d', '%d')" %(row["ItemID"], row["Name"], row["ItemNo"], row["CP"], row["SP"])
+    query3 = "INSERT INTO ITEM(ItemID, Name, ItemNumber, ItemCostPrice, ItemSalePrice) VALUES('%s', '%s', '%d', '%d', '%d')" %(row["ItemID"], row["Name"], int(row["ItemNo"]), int(row["CP"]), int(row["SP"]))
 
     cur.execute(query3)
     con.commit()
@@ -63,7 +63,7 @@ def openStore():
     row["StoreID"] = input("Store ID: ")
     row["Location"] = input("Location: ")
     row["NumReg"] = input("Number of Registers: ")
-    row["Types"] = input("Types of Items").split(" ")
+    row["Types"] = input("Types of Items: ").split(" ")
 
     for i in range(len(row["Types"])):
         query1 = "INSERT INTO HASTYPE(StoreID, TypesOfItems) VALUES('%s', '%s')" %( row["StoreID"], row["Types"][i])
@@ -71,7 +71,7 @@ def openStore():
         con.commit()
 
 
-    query2 = "INSERT INTO STORE(StoreID, Location, NumOfRegisters) VALUES('%s', '%s', %d')" %(row["StoreID"], row["Location"], row["NumReg"])
+    query2 = "INSERT INTO STORE(StoreID, Location, NumOfRegisters) VALUES('%s', '%s', '%d')" %(row["StoreID"], row["Location"], int(row["NumReg"]))
 
     cur.execute(query2)
     con.commit()
@@ -87,7 +87,7 @@ def newCustomer():
     row["Phone"] = input("Phone Numbers: ").split(" ")
 
     for i in range(len(row["Phone"])):
-        query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
+        query1 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], int(row["Phone"][i]))
         cur.execute(query1)
         con.commit()
 
@@ -109,15 +109,15 @@ def buyRegister():
     query = "SELECT NumOfRegisters FROM STORE WHERE StoreID='%s' " %(row["StoreID"])
     cur.execute(query)
     calcRegNo = cur.fetchall()
-    RegNo=int(calcRegNo[0])+1
+    RegNo=int(calcRegNo[0][0])+1
 
 
     for i in range(len(row["CashierIDs"])):
-        query1 = "INSERT INTO REGISTER(StoreID, RegisterNumber, CashierHRID, ManagerHRID) VALUES('%s', '%d', '%s', '%s')" %(row["StoreID"], regNo, row["CashierIDs"][i], row["ManagerID"])
+        query1 = "INSERT INTO REGISTER(StoreID, RegisterNumber, CashierHRID, ManagerHRID) VALUES('%s', '%d', '%s', '%s')" %(row["StoreID"], RegNo, row["CashierIDs"][i], row["ManagerID"])
         cur.execute(query1)
         con.commit()
 
-    query2 = "UPDATE STORE SET NumOfRegisters='%d' WHERE StoreID='%s' " %( regNo, row["StoreID"])
+    query2 = "UPDATE STORE SET NumOfRegisters='%d' WHERE StoreID='%s' " %( RegNo, row["StoreID"])
 
     cur.execute(query2)
     con.commit()
@@ -133,7 +133,7 @@ def newSale():
     row["Start"] = input("Start Date (YYYY-MM-DD): ")
     row["End"] = input("End Date (YYYY-MM-DD): ")
 
-    query2 = "INSERT INTO SALE(SaleID, StoreID, PercentageCredit, StartDate, EndDate) VALUES('%s', '%s', '%d', '%s', '%s')" %(row["SaleID"], row["StoreID"], row["Credit"], row["Start"], row["End"])
+    query2 = "INSERT INTO SALE(SaleID, StoreID, PercentageCredit, StartDate, EndDate) VALUES('%s', '%s', '%d', '%s', '%s')" %(row["SaleID"], row["StoreID"], int(row["Credit"]), row["Start"], row["End"])
 
     cur.execute(query2)
     con.commit()
@@ -154,30 +154,30 @@ def newPurchase():
         cur.execute(query1)
         con.commit()
 
-        query = "SELECT ItemName FROM ITEM WHERE ItemID='%s' " %(row["ItemIDs"][i])
+        query = "SELECT Name FROM ITEM WHERE ItemID='%s' " %(row["ItemIDs"][i])
         cur.execute(query)
         itemname = cur.fetchall()
-        itemname = string(itemname[0])
-    
-        query2 = "INSERT IGNORE INTO BOUGHT(CustomerHRID, ItemName) VALUES('%s', '%s')" %(row["CustID"], itemname)
+        itemname = str(itemname[0][0])
+
+        query2 = "INSERT INTO BOUGHT(CustomerHRID, ItemName) VALUES('%s', '%s')" %(row["CustID"], itemname)
         cur.execute(query2)
         con.commit()
 
         query3 = "SELECT Profit FROM ITEM WHERE ItemID='%s' " %(row["ItemIDs"][i])
         cur.execute(query3)
         profit=cur.fetchall()
-        profit=int(profit[0])
+        profit=int(profit[0][0])
         sum = sum+profit
 
     query4 = "SELECT PercentageCredit FROM SALE WHERE SaleID='%s'" %(row["SaleID"])
     cur.execute(query4)
     Credit=cur.fetchall()
-    Credit=int(Credit[0])
+    Credit=int(Credit[0][0])
 
     query5 = "SELECT StoreCredit FROM CUSTOMER WHERE HRID='%s'" %(row["CustID"])
     cur.execute(query5)
     curCredit=cur.fetchall()
-    curCredit=float(curCredit[0])
+    curCredit=float(curCredit[0][0])
 
     query6 = "UPDATE CUSTOMER SET StoreCredit='%d' WHERE HRID='%s'" %(curCredit+Credit*profit/100,row["CustID"])
     cur.execute(query6)
@@ -192,7 +192,7 @@ def addSupervisor():
     print("Enter New Supervisor's and Supervisee's details: ")
     row["EmpHRID"] = input("Supervisee HR ID: ")
     row["SuperHRID"] = input("Supervisor HR ID: ")
-    
+
 
     query2 = "INSERT INTO SUPERVISES(CashierHRID, SupervisorHRID) VALUES('%s', '%s')" %(row["EmpHRID"], row["SuperHRID"])
     cur.execute(query2)
@@ -304,7 +304,7 @@ def modifyItem():
     query = "SELECT ItemName FROM Item WHERE ItemID='%s' " %(row["ItemID"])
     cur.execute(query)
     Name = cur.fetchall()
-    Name=string(Name[0])
+    Name=string(Name[0][0])
 
     query="DELETE FROM HAS WHERE ItemName='%s'" %(Name)
     cur.execute(query)
@@ -315,7 +315,7 @@ def modifyItem():
         cur.execute(query1)
         con.commit()
 
-    query2 = "UPDATE ITEM SET ItemNumber='%d', ItemCostPrice='%d', ItemSellPrice='%d' WHERE ItemID='%s'" %(row["ItemNo"], row["CP"], row["SP"], row["ItemID"])
+    query2 = "UPDATE ITEM SET ItemNumber='%d', ItemCostPrice='%d', ItemSellPrice='%d' WHERE ItemID='%s'" %(int(row["ItemNo"]), int(row["CP"]), int(row["SP"]), row["ItemID"])
 
     cur.execute(query2)
     con.commit()
@@ -336,7 +336,7 @@ def modifyCustomerDetails():
     con.commit()
 
     for i in range(len(row["Phone"])):
-        query2 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
+        query2 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], int(row["Phone"][i]))
         cur.execute(query2)
         con.commit()
 
@@ -359,11 +359,11 @@ def modifyEmpDetails():
     con.commit()
 
     for i in range(len(row["Phone"])):
-        query2 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], row["Phone"][i])
+        query2 = "INSERT INTO HR(HRID, Name, Email, PhoneNumber) VALUES('%s', '%s', '%s', '%d')" %(row["HRID"], row["Name"], row["Email"], int(row["Phone"][i]))
         cur.execute(query2)
         con.commit()
 
-    query3 = "UPDATE EMPLOYEE SET StoreID='%s', TypeOfEmployee='%s', Salary='%d' WHERE HRID='%s'" %( row["StoreID"], row["Type"], row["Salary"], row["HRID"])
+    query3 = "UPDATE EMPLOYEE SET StoreID='%s', TypeOfEmployee='%s', Salary='%d' WHERE HRID='%s'" %( row["StoreID"], row["Type"], int(row["Salary"]), row["HRID"])
     cur.execute(query3)
     con.commit()
     return
@@ -384,7 +384,7 @@ def modifyRegister():
     con.commit()
 
     for i in range(len(row["CashierIDs"])):
-        query2 = "INSERT INTO REGISTER(StoreID, RegisterNumber, CashierHRID, ManagerHRID) VALUES('%s', '%d', '%s', '%s')" %(row["StoreID"], row["RegID"], row["CashierIDs"][i], row["ManagerID"])
+        query2 = "INSERT INTO REGISTER(StoreID, RegisterNumber, CashierHRID, ManagerHRID) VALUES('%s', '%d', '%s', '%s')" %(row["StoreID"], int(row["RegID"]), row["CashierIDs"][i], row["ManagerID"])
         cur.execute(query2)
         con.commit()
     return
@@ -399,7 +399,7 @@ def modifySale():
     row["Start"] = input("New Start Date (YYYY-MM-DD): ")
     row["End"] = input("New End Date (YYYY-MM-DD): ")
 
-    query2 = "UPDATE SALE SET StoreID='%s', PercentageCredit='%s', StartDate='%s', EndDate='%d' WHERE SaleID='%s'" %(row["StoreID"], row["Credit"], row["StartDate"], row["EndDate"], row["SaleID"])
+    query2 = "UPDATE SALE SET StoreID='%s', PercentageCredit='%s', StartDate='%s', EndDate='%s' WHERE SaleID='%s'" %(row["StoreID"], row["Credit"], row["StartDate"], row["EndDate"], row["SaleID"])
 
     cur.execute(query2)
     con.commit()
@@ -411,7 +411,7 @@ def changeSupervisor():
     print("Enter Supervisor's and Supervisee's details: ")
     row["EmpHRID"] = input("Supervisee HR ID: ")
     row["SuperHRID"] = input("Supervisor HR ID: ")
-    
+
 
     query2 = "UPDATE SUPERVISES SET SupervisorHRID='%s' WHERE CashierHRID='%s' " %(row["SuperHRID"], row["EmpHRID"])
     cur.execute(query2)
@@ -424,7 +424,7 @@ def changeTypes():
     print("Enter Store's details: ")
     row["StoreID"] = input("Store ID: ")
     row["Types"] = input("Types of Items Carried ").split(" ")
-    
+
 
     query1 = "DELETE FROM HASTYPES WHERE StoreID='%s'" %(row["StoreID"])
     cur.execute(query1)
@@ -433,7 +433,7 @@ def changeTypes():
     for i in range(len(row["Types"])):
         query2 = "INSERT INTO HASTYPE(StoreID, TypesOfItems) VALUES('%s', '%s')" %( row["StoreID"], row["Types"][i])
         cur.execute(query2)
-        con.commit()   
+        con.commit()
 
     return
 
@@ -452,7 +452,7 @@ def updateManagerSalary():
         query="SELECT SUM(TotalProfit) FROM REGISTER WHERE ManagerHRID='%s'" %(Managers[i])
         cur.execute()
         managerSalary=cur.fetchall()
-        managerSalary=float(managerSalary[0])
+        managerSalary=float(managerSalary[0][0])
         query2="UPDATE EMPLOYEE SET Salary='%d' WHERE HRID='%s'" %(managerSalary*0.2, Managers[i])
         cur.execute(query2)
         con.commit()
@@ -466,7 +466,7 @@ def reportProfit():
     query = "SELECT SUM(TotalProfit) FROM REGISTER WHERE StoreID = '%s'"
     cur = execute(query)
     blah = cur.fetchall()
-    blah=int(blah[0])
+    blah=int(blah[0][0])
     print (blah)
     return
 
@@ -492,7 +492,7 @@ def showCustomerCredits():
 
     cur.execute(query2)
     blah = cur.fetchall()
-    blah=int(blah[0])
+    blah=int(blah[0][0])
     print(blah)
     return
 
@@ -520,7 +520,7 @@ def checkSuperviseeSalaryProfit():
     if len(superviseeSalary) == 0:
         print("This employee is not your supervisee")
     return
- 
+
 def checkMySalary():
     global cur
     id=input("Enter HRID whose salary you want to see:")
@@ -529,7 +529,7 @@ def checkMySalary():
     query = "SELECT Salary FROM EMPLOYEE WHERE HRID = '%s'"
     cur.execute(query)
     blah = cur.fetchall()
-    blah=int(blah[0])
+    blah=int(blah[0][0])
     print (blah)
     return
 
@@ -564,20 +564,17 @@ optionFunctionMapping = {
 }
 
 while(1):
-        
-    username = "root"
-    password = ""
 
-    try:
-        con = pymysql.connect('localhost',
-                username,
-                password,
-                'FRANCHISE',
-                pymysql.cursors.DictCursor)
-        with con:
-            cur = con.cursor()
-            while(1):
-                tmp = sp.call('clear',shell=True)
+        username = "mona"#input("Username: ")
+        password = "password"#input("Password: ")
+
+    #try:
+        con = pymysql.connect("localhost","mona","password","FRANCHISE");
+
+
+        cur = con.cursor()
+        while(1):
+                #tmp = sp.call('clear',shell=True)
                 print("1. Hire a new employee")
                 print("2. Add an item")
                 print("3. Open a store")
@@ -606,17 +603,17 @@ while(1):
                 print("26. Check own salary")
                 print("27. Logout")
                 c = int(input("Enter choice> "))
-                tmp = sp.call('clear',shell=True)
+                #tmp = sp.call('clear',shell=True)
                 if c==27:
                     break
                 else:
-                    send(optionFunctionMapping[c]())
+                    optionFunctionMapping[c]()
 
 
-    except:
-        tmp = sp.call('clear',shell=True)
-        print("Connection Refused: Either username or password is incorrect or user doesn't have access to database")
-        tmp = input("Enter any key to CONTINUE>")
-    
-   
+    #except:
+     #   tmp = sp.call('clear',shell=True)
+     #   print("Connection Refused: Either username or password is incorrect or user doesn't have access to database")
+     #   tmp = input("Enter any key to CONTINUE>")
+
+
 
