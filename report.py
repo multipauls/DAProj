@@ -448,12 +448,13 @@ def updateManagerSalary():
     query1 = "SELECT HRID FROM EMPLOYEE WHERE TypeOfEmployee='Manager'"
     cur.execute(query1)
     Managers=cur.fetchall()
+    
     for i in range(len(Managers)):
         query="SELECT SUM(TotalProfit) FROM REGISTER WHERE ManagerHRID='%s'" %(Managers[i])
-        cur.execute()
+        cur.execute(query)
         managerSalary=cur.fetchall()
         managerSalary=float(managerSalary[0][0])
-        query2="UPDATE EMPLOYEE SET Salary='%d' WHERE HRID='%s'" %(managerSalary*0.2, Managers[i])
+        query2="UPDATE EMPLOYEE SET Salary='%d' WHERE HRID='%s'" %(managerSalary*0.2, Managers[i][0])
         cur.execute(query2)
         con.commit()
     return
@@ -566,11 +567,12 @@ optionFunctionMapping = {
 
 while(1):
 
-        username = "mona"#input("Username: ")
-        password = "password"#input("Password: ")
+        username = input("Username: ")
+        password = input("Password: ")
 
         try:
-            con = pymysql.connect("localhost","mona","password","FRANCHISE");
+            tmp = sp.call('clear',shell=True)
+            con = pymysql.connect("localhost",username,password,"FRANCHISE");
 
 
             cur = con.cursor()
@@ -601,16 +603,19 @@ while(1):
                 print("24. Check sales going on now")
                 print("25. Check supervisee's salary and profit")
                 print("26. Check own salary")
+                print("27. Logout")
 
                 c = int(input("Enter choice> "))
-
-
-                optionFunctionMapping[c]()
+                if(c==27):
+                    break
+                else:
+                    optionFunctionMapping[c]()
+                    
 
 
         except:
             tmp = sp.call('clear',shell=True)
-            print("Error")
+            print("Error in executing command")
             tmp = input("Enter any key to CONTINUE>")
 
 
