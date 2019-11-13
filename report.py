@@ -159,7 +159,7 @@ def newPurchase():
         itemname = cur.fetchall()
         itemname = str(itemname[0][0])
 
-        query2 = "INSERT INTO BOUGHT(CustomerHRID, ItemName) VALUES('%s', '%s')" %(row["CustID"], itemname)
+        query2 = "INSERT IGNORE INTO BOUGHT(CustomerHRID, ItemName) VALUES('%s', '%s')" %(row["CustID"], itemname)
         cur.execute(query2)
         con.commit()
 
@@ -177,7 +177,6 @@ def newPurchase():
     query5 = "SELECT StoreCredit FROM CUSTOMER WHERE HRID='%s'" %(row["CustID"])
     cur.execute(query5)
     curCredit=cur.fetchall()
-    print(curCredit)
     curCredit=float(curCredit[0][0])
 
     query6 = "UPDATE CUSTOMER SET StoreCredit='%d' WHERE HRID='%s'" %(curCredit+Credit*profit/100,row["CustID"])
@@ -189,6 +188,9 @@ def newPurchase():
     regno=cur.fetchall()
     regno=int(regno[0][0])
     query8= "UPDATE REGISTER SET TotalProfit=TotalProfit+'%d' WHERE RegisterNumber='%s' AND StoreID='%s'" %(sumans, regno, row["StoreID"]) 
+    cur.execute(query8)
+    con.commit()
+    query9 = "UPDATE EMPLOYEE SET Salary= Salary+'%d' WHERE HRID= '%s'" %(sumans*0.2, row["EmployeeID"])
     cur.execute(query8)
     con.commit()
     return
@@ -507,7 +509,7 @@ def showCustomerCredits():
 def checkNowSales():
     global cur
     today=date.today()
-    query="SELECT * FROM SALE WHERE '%s' BETWEEN StartDate AND EndDate"
+    query="SELECT * FROM SALE WHERE '%s' BETWEEN StartDate AND EndDate" %(today)
     cur.execute(query)
     salesNow=cur.fetchall()
     for i in range(len(salesNow)):
