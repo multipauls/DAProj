@@ -148,7 +148,7 @@ def newPurchase():
     row["EmployeeID"] = input("Employee HR ID: ")
     row["StoreID"] = input("Store ID: ")
     row["SaleID"] = input("Sale ID: ")
-    sum = 0
+    sumans = 0
     for i in range(len(row["ItemIDs"])):
         query1 = "INSERT INTO PURCHASES(CustomerHRID, ItemID, EmployeeHRID, StoreID, SaleID) VALUES('%s', '%s', '%s', '%s', '%s')" %(row["CustID"], row["ItemIDs"][i], row["EmployeeID"], row["StoreID"], row["SaleID"])
         cur.execute(query1)
@@ -167,7 +167,7 @@ def newPurchase():
         cur.execute(query3)
         profit=cur.fetchall()
         profit=int(profit[0][0])
-        sum = sum+profit
+        sumans = sumans+profit
 
     query4 = "SELECT PercentageCredit FROM SALE WHERE SaleID='%s'" %(row["SaleID"])
     cur.execute(query4)
@@ -184,6 +184,13 @@ def newPurchase():
     cur.execute(query6)
     con.commit()
 
+    query7 = "SELECT RegisterNumber FROM REGISTER WHERE CashierHRID='%s'" %(row["EmployeeID"])
+    cur.execute(query7)
+    regno=cur.fetchall()
+    regno=int(regno[0][0])
+    query8= "UPDATE REGISTER SET TotalProfit=TotalProfit+'%d' WHERE RegisterNumber='%s' AND StoreID='%s'" %(sumans, regno, row["StoreID"]) 
+    cur.execute(query8)
+    con.commit()
     return
 
 
